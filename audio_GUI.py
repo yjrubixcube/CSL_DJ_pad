@@ -4,7 +4,7 @@ import sys
 import pygame
 import tkinter as tk
  
-COM_PORT = '/dev/cu.usbmodem142101'  # 請自行修改序列埠名稱
+COM_PORT = 'COM3'  # 請自行修改序列埠名稱
 BAUD_RATES = 9600
 ser = serial.Serial(COM_PORT, BAUD_RATES)
 if ser.is_open is True:
@@ -31,6 +31,7 @@ def updateCanvas():
 
 try:
     file=r'/Users/naonao/Desktop/Avicii-WithoutYou-Instrumental.mp3' # 播放音樂的路徑
+    file = r"never_gonna_give_you_up.mp3"
     pygame.mixer.init()
     track = pygame.mixer.music.load(file)
     pygame.mixer.music.play()
@@ -50,7 +51,18 @@ try:
                 v = int(ser.read_until().decode()) / 1024
                 pygame.mixer.music.set_volume(v)
                 volume = v
+                print(f"{v=}")
                 updateCanvas()
+            if res == "1\n":
+                music_state = True
+                pygame.mixer.music.unpause()
+                updateCanvas()
+                print("unpause")
+            if res == "0\n":
+                music_state = False
+                pygame.mixer.music.pause()
+                updateCanvas()
+                print("pause")
         
  
 except KeyboardInterrupt:
